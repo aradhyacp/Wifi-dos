@@ -6,10 +6,24 @@ import re
 import csv
 import os
 import time
-import shutil
-from datetime import datetime
+import atexit
 
 active_wireless_networks = []
+
+def cleanup_csv():
+    """Remove any leftover CSV files"""
+    for f in os.listdir():
+        if f.endswith('.csv'):
+            os.remove(f)
+
+def cleanup_on_exit():
+    """Cleanup when program exits"""
+    cleanup_csv()
+    if hacknic:
+        subprocess.run(["airmon-ng", "stop", hacknic + "mon"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+# Register cleanup to run on any exit
+atexit.register(cleanup_on_exit)
 
 def check_for_essid(essid, lst):
     """Check if ESSID already exists in the list"""
@@ -36,17 +50,7 @@ if not 'SUDO_UID' in os.environ.keys():
     print("Try running this program with sudo.")
     exit()
 
-# Backup existing .csv files
-for file_name in os.listdir():
-    if ".csv" in file_name:
-        print("There shouldn't be any .csv files in your directory. We found .csv files in your directory.")
-        directory = os.getcwd()
-        try:
-            os.mkdir(directory + "/backup/")
-        except:
-            print("Backup folder exists.")
-        timestamp = datetime.now()
-        shutil.move(file_name, directory + "/backup/" + str(timestamp) + "-" + file_name)
+cleanup_csv()
 
 wlan_pattern = re.compile("^wlan[0-9]+")
 
@@ -135,4 +139,5 @@ try:
 except KeyboardInterrupt:
     print("Stop monitoring mode")
     subprocess.run(["airmon-ng", "stop", hacknic + "mon"])
+    cleanup_csv()
     print("Thank you! Exiting now")
