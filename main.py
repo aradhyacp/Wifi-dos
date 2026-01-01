@@ -50,8 +50,6 @@ if not 'SUDO_UID' in os.environ.keys():
     print("Try running this program with sudo.")
     exit()
 
-cleanup_csv()
-
 wlan_pattern = re.compile("^wlan[0-9]+")
 
 check_wifi_result = wlan_pattern.findall(subprocess.run(["iwconfig"], capture_output=True).stdout.decode())
