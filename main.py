@@ -7,8 +7,19 @@ import csv
 import os
 import time
 import atexit
+import shutil
 
 active_wireless_networks = []
+hacknic = None
+
+def check_tools():
+    """Check if required tools are installed"""
+    required = ['iwconfig', 'airmon-ng', 'airodump-ng', 'aireplay-ng']
+    missing = [tool for tool in required if not shutil.which(tool)]
+    if missing:
+        print(f"Missing required tools: {', '.join(missing)}")
+        print("Install aircrack-ng suite: sudo apt install aircrack-ng wireless-tools")
+        exit(1)
 
 def cleanup_csv():
     """Remove any leftover CSV files"""
@@ -49,6 +60,8 @@ print("\n****************************************************************")
 if not 'SUDO_UID' in os.environ.keys():
     print("Try running this program with sudo.")
     exit()
+
+check_tools()
 
 wlan_pattern = re.compile("^wlan[0-9]+")
 
@@ -136,6 +149,4 @@ try:
         print("Deauthenticating clients, press ctrl-c to stop")
 except KeyboardInterrupt:
     print("Stop monitoring mode")
-    subprocess.run(["airmon-ng", "stop", hacknic + "mon"])
-    cleanup_csv()
     print("Thank you! Exiting now")
