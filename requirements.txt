@@ -1,0 +1,13 @@
+# No external Python packages required
+# This script uses only Python standard library modules:
+# - subprocess
+# - re
+# - csv
+# - os
+# - time
+# - shutil
+# - datetime
+
+# System requirements (must be installed on your system):
+# - aircrack-ng suite (airmon-ng, airodump-ng, aireplay-ng)
+# - iwconfig (wireless-tools)
