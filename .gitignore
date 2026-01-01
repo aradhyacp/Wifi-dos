@@ -1,7 +1,4 @@
-# Backup folder created by the script
-backup/
-
-# CSV files generated during scanning
+# CSV files generated during scanning (cleaned up automatically)
 *.csv
 
 # Python
