@@ -98,10 +98,15 @@ try:
                                 active_wireless_networks.append(row)
 
         print("Scanning. Press Ctrl+C when you want to select which wireless network you want to attack.\n")
-        print("No |\tBSSID              |\tChannel|\tESSID                         |")
-        print("___|\t___________________|\t_______|\t______________________________|")
+        print("┌─────┬───────────────────┬─────────┬────────────────────────────────┐")
+        print("│ No  │ BSSID             │ Channel │ ESSID                          │")
+        print("├─────┼───────────────────┼─────────┼────────────────────────────────┤")
         for index, item in enumerate(active_wireless_networks):
-            print(f"{index}\t{item['BSSID']}\t{item['channel'].strip()}\t\t{item['ESSID']}")
+            bssid = item['BSSID']
+            channel = item['channel'].strip()
+            essid = item['ESSID'][:30] if len(item['ESSID']) > 30 else item['ESSID']
+            print(f"│ {index:<3} │ {bssid:<17} │ {channel:^7} │ {essid:<30} │")
+        print("└─────┴───────────────────┴─────────┴────────────────────────────────┘")
         time.sleep(1)
 
 except KeyboardInterrupt:
